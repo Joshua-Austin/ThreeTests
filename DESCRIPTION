@@ -1,0 +1,31 @@
+Package: ThreeTests
+Title: Provides a linear model test, a t-test, and a chi-squared test
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Joshua",
+           family = "Austin",
+           role = c("aut", "cre"),
+           email = "joshua.austin@students.mq.edu",
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: Gives functions to run a linear model test of 2 variables, a t-test for 2 samples, and a chi-squared test accross 2 catagories. Package also provides the ProjectData dataset with physical attributes for 1000 people.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Depends: 
+    R (>= 2.10)
+Imports: 
+    ggplot2,
+    glue,
+    stats,
+    patchwork,
+    gridExtra,
+    bookdown,
+    dplyr
+Suggests: 
+    rmarkdown,
+    knitr,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+VignetteBuilder: knitr
