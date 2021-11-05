@@ -16,13 +16,17 @@
 #' y = sample(c('bald', 'short', 'long'), 100, replace=TRUE))
 ChiSquared <- function(x = ProjectData$gender, y = ProjectData$phys, xname = "Gender", yname = "Physical Activity", sig.fig = 0.05) {
 
-  hyp <- glue::glue("Testing if there is a relationship between the categorical variables {xname} and {yname}.
-                  The null hypothesis H0: {xname} and {yname} are independent.
+  hyp <- glue::glue("Testing if there is a relationship between categorical variables {xname} and {yname}.
+                  The Null hypothesis H0: {xname} and {yname} are independent.
                   Alternative H1: There is a relationship between {xname} and {yname}.")
 
   assumptions <-
-    glue::glue("The assumptions of a chi-squared test are that the variables are categorical, all observations are independent and mutually exclusive of each other, and the expected value in at least 80% of cells is 5 or more (or all are over 5 if there are one 4 cells).
-               The function used to generate this chi-squared report checks if the input variables are categorical, it will produce an error if this assumption isn't met. Similarly a warming will be generated if too many cells are below 5. The other assumptions can't be tested directly as they rely on the data source, can only ask or trust that the information was gathered correctly.")
+    glue::glue("The assumptions of a chi-squared test are that the variables are categorical, all
+    observations are independent and mutually exclusive of each other, and the expected value in
+    at least 80% of cells is 5 or more (or all are over 5 if there are one 4 cells).
+    The underlying function checks that both are categorical, and a warning will appear if
+    cell values are too small. Assuming other assumptions are met.")
+
 
   if(!is.character(x)||!is.character(y)){
     stop("Error: All input need to be of type categorical.")
@@ -38,17 +42,21 @@ ChiSquared <- function(x = ProjectData$gender, y = ProjectData$phys, xname = "Ge
 
   decision <-
     if(pval < sig.fig){
-      glue::glue("Reject the null hypothesis in favour of the alternative as the reported p-value, {pval}, is less than the {100*sig.fig}% significance level.")
+      glue::glue("Reject the null hypothesis in favour of the alternative as the reported
+                 p-value, {pval}, is less than the {100*sig.fig}% significance level.")
     }else{
-      glue::glue("There is insufficient evidence to reject the null hypothesis as the p-value, {pval}, is above the {100*sig.fig}% significant level.")
+      glue::glue("There is insufficient evidence to reject the null hypothesis as the  reported
+                 p-value, {pval}, is above the {100*sig.fig}% significant level.")
     }
 
   conclusion <-
     if(pval < sig.fig){
-      glue::glue("The Chi-Squared null hypothesis has been refected there must be a relationship between catagorical variables {xname} and {yname}.
+      glue::glue("The Chi-Squared null hypothesis has been refected, there is a relationship between
+      categorical variables {xname} and {yname}.
       Further testing will be needed to find exactly what the relationship is.")
     }else{
-      glue::glue("The Chi-Squared null hypothesis has not been rejected there is no statistically significant relationship between {xname} and {yname}.")
+      glue::glue("The Chi-Squared null hypothesis has not been rejected there is no statistically
+                 significant relationship between {xname} and {yname}.")
     }
 
 

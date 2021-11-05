@@ -4,44 +4,51 @@ author: "Joshua Austin"
 output:
   bookdown::pdf_document2:
       toc: FALSE
+bibliography: references.bib
+nocite: '@*'
+date: "5/11/2021"
 editor_options: 
   chunk_output_type: console
   markdown: 
     wrap: 72
+
 ---
 
-```{r setup, echo=FALSE}
-#library(ThreeTests)
+```{r setup, echo=FALSE, include=FALSE}
+library(ThreeTests)
 library(dplyr)
+
+knitr::opts_chunk$set(echo = F, message=FALSE, comment =NA)
+
 
 
 # Change the data with csv to report on a new dataset
-#  Reportdata <- ProjectData #read.csv("~Reportdataatreport.csv")
+  Reportdata <- ProjectData #read.csv("~Reportdataatreport.csv")
 
 
 # To change parameters for any of the tests change filters below
   signif <- 0.05
   
   #details for a new linear model (question 1)
-#  LM_xdata <- Reportdata$height #change height to new column name
-#  LM_ydata <- Reportdata$weight
+  LM_xdata <- Reportdata$height #change height to new column name
+  LM_ydata <- Reportdata$weight
   LM_xname <- "height"
   LM_yname <- "weight"
   
 
   # change the t-test data
-#  tt_xdata <- (Reportdata %>% 
-#    filter(gender == "Male"))$height #change filter and height to suit new data
-#  tt_ydata <- (Reportdata %>% 
-##    filter(gender == "Female"))$height
+  tt_xdata <- (Reportdata %>% 
+    filter(gender == "Male"))$height #change filter and height to suit new data
+  tt_ydata <- (Reportdata %>% 
+    filter(gender == "Female"))$height
   tt_cata <- "height"
   tt_xname <- "Male"
   tt_yname <- "Female"
   
   
   # chi-squared categorical test
-#  chi_xdata <- Reportdata$gender
-#  chi_ydata <- Reportdata$phys
+  chi_xdata <- Reportdata$gender
+  chi_ydata <- Reportdata$phys
   chi_xname <- "gender"
   chi_yname <- "physical activity"
   
@@ -54,7 +61,7 @@ library(dplyr)
 # Abstract
 
 
-An analysis of `r length(Reportdata)` observations in a dataset that includes the variables `r unique(c(LM_xname, LM_yname, tt_cata, chi_xname, chi_yname))`. The report looks at if there is a linear relationship between `r LM_xname` and `r LM_yname`, if the mean `r tt_cata` differs for `r tt_xname` and `r tt_yname`, and if there is a relationship between categorical variables `r chi_xname` and `r chi_yname`.
+An analysis of `r count(Reportdata)` observations in a dataset that includes the variables `r unique(c(LM_xname, LM_yname, tt_cata, chi_xname, chi_yname))`. The report looks at if there is a linear relationship between `r LM_xname` and `r LM_yname`, if the mean `r tt_cata` differs for `r tt_xname` and `r tt_yname`, and if there is a relationship between categorical variables `r chi_xname` and `r chi_yname`.
 
 
           
@@ -67,31 +74,33 @@ The first question is if a linear relationship existed between `r LM_xname` and 
 
 The next question is if the mean `r tt_cata` of `r tt_xname` and `r tt_yname` is the same. This is explored using a two sample *t-test* to compare the means of both groups.
 
-The final question determines if there is an association between `r chi_xname` and `r chi_yname`. A *chi-squared* test is used to compare the spread of observation between the groups compared to what the expected observations would be if there is no association between the categories.
+The final question determines if there is an association between `r chi_xname` and `r chi_yname`. A *chi-squared* test is used to compare the spread of observation between the groups compared to what the expected observations would be if there is no association between the categories (@LockPattiFrazer2019S).
 
 Each question has been address in a different way so have been separated in the following sections.
 
 
+\newpage
 # Methodology 
 
 ## Question 1
 
-To test if there is a linear relationship between `r LM_xname` and `r LM_yname` a simple linear regression analysis is run. The linear regression will create a linear formula to relate the means of `r LM_xname` and `r LM_yname` before reviewing the residuals, difference between the observed and formulated values, to determine if the formula is reliable. Before the regression can be completed all assumptions need to be checked.
+To test if there is a linear relationship between `r LM_xname` and `r LM_yname` a simple linear regression analysis is run. The linear regression will create a linear formula to relate the means of `r LM_xname` and `r LM_yname` before reviewing the residuals, difference between the observed and formulated values, to determine if the formula is reliable. Before the regression can be completed all assumptions need to be checked (@alma99244562776602171).
 
-```{r lmhyp, echo=FALSE}
+```{r lmhyp, echo=FALSE, fig.height=2.6, fig.width=6}
 #The package includes a LinearModel function that uses the project dataset by default (the data was saved as a dataset included with the package under ProjectData)
 
-#LMfit <- LinearModel(LM_xdata, LM_ydata, LM_xname, LM_yname, signif)
-#LMfit$assumptions
-
-#LMfit$plot1
-
-#LMfit$plot2
-
-#LMfit$plot3
+LMfit <- LinearModel(LM_xdata, LM_ydata, LM_xname, LM_yname, signif)
+LMfit$assumptions
 
 
-#LMfit$hypothesis
+LMfit$plot1
+
+LMfit$plot2
+
+LMfit$plot3
+
+
+LMfit$hypothesis
 ```
 
 The linear model fitted is;
@@ -107,14 +116,19 @@ A t-test will be used to check if there is a statistically significant differenc
 
 
 
-```{r ttestmeth, echo=FALSE}
+```{r ttestmeth, echo=FALSE, fig.height=4}
 #The package includes a ttest_report.
 
 
-#ttestfit <-   ttest_report(tt_xdata, tt_ydata, tt_cata, tt_xname, tt_yname, signif)
-#ttestfit$assumptions
-#ttestfit$plots
-#ttestfit$hypothesis
+ttestfit <-   ttest_report(tt_xdata, tt_ydata, tt_cata, tt_xname, tt_yname, signif)
+ttestfit$assumptions
+ttestfit$plot1
+```
+```{r ttestmeth2, echo=FALSE, fig.height=4}
+
+
+ttestfit$plot2
+ttestfit$hypothesis
 ```
 
   
@@ -125,14 +139,14 @@ The t-test will return a test statistic and corresponding p-value. The p-value i
 
 To test if there is an association between categorical variables, `r chi_xname` and `r chi_yname` a *chi-squared* test is used. The test will compare the observed distribution between the groups with what would have been expected if there was infact no relationship.
 
-```{r ttestmeth, echo=FALSE}
+```{r chimeth, echo=FALSE}
 #The package includes a ChiSquared function.
 
 
-#Chifit <-  ChiSquared(chi_xdata, chi_ydata, chi_xname, chi_yname, signif)
-#Chifit$assumptions
+Chifit <-  ChiSquared(chi_xdata, chi_ydata, chi_xname, chi_yname, signif)
+Chifit$assumptions
 
-#chifit$hypothesis
+Chifit$hypothesis
 ```
 
 The Chi-Squared test will calculate a value for each cell using the below formula, all of the cells are then summed to find the test statistic and corresponding p-value.
@@ -143,7 +157,7 @@ The Chi-Squared test will calculate a value for each cell using the below formul
 \end{equation}
 
 
-
+\newpage
 # Results
 
 ## Question 1
@@ -153,6 +167,8 @@ LMfit$Report
 LMfit$decision
 ```
 
+    
+
 ## Question 2
 
 The t-test gives the result;
@@ -161,27 +177,36 @@ ttestfit$test.stats
 ```
 Note the p-value listed towards the top may be rounded due to R limitations.
 
-The test indicated to `r ttestfit$decision`
+The test indicated to `r ttestfit$decision`.
+
 
 
 ## Question 3
 
-The $\chi$-squared tsets statistic and corresponding p-value are;
+The $\chi$-squared tests statistic and corresponding p-value are;
 ```{r}
 Chifit$Chi.stats
 Chifit$decision
 ```
 
 
-#Conclusion
+\newpage
+# Conclusion
 
 After testing all 3 questions using a variety of statistical methods we conclude;
 
+
 1. Is there a linear relationship between `r LM_xname` and `r LM_yname`?
-`r LMfit$conclusion`
+  `r LMfit$conclusion`
 
 2. Is the mean `r tt_cata` of `r tt_xname` and `r tt_yname` the same?
-`r ttestfit$conclusion`
+  `r ttestfit$conclusion`
 
 3. Is there any association between `r chi_xname` and `r chi_yname`?
-`r Chifit$conclusion`
+  `r Chifit$conclusion`
+  
+ 
+# References
+
+
+  

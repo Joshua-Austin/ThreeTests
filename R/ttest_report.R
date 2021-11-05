@@ -16,26 +16,29 @@
 #' ttest_report(rpois(20, 10), rpois(20, 11), cata = "teeth")
 ttest_report <- function(x = ProjectMale$height, y = ProjectFemale$height, cata = "height", xname = "Male", yname = "Female", sig.fig = 0.05) {
 
-  hyp <- glue::glue("Testing if the mean {cata} for {xname} and {yname} are the same the following hypothesis test will be tested using a t-test.
+  hyp <- glue::glue("Testing if the mean {cata}'s for both are the same using a t-test under hypothesis;
                   Null hypothesis H0: mean {cata} of {xname} and {yname} are equal.
                   Alternative hypothesis H1: The {cata}'s are NOT equal.")
 
   assumptions <-
-    glue::glue("The assumptions for a t-test are that the samples are that both groups are independent, random selected, have equal variances and follow a normally distribution. Random selection and equal variances are going to be assumed, but to confirm both samples are normally distributed they need to have a fairly normal bell looks when plotted.")
+    glue::glue("The assumptions for a t-test are that the samples are that both groups are independent,
+               randomly selected, have equal variances and follow a normally distribution.
+               Random selection and equal variances are going to be assumed, but to confirm both samples
+               are normally distributed they need tobe plotted.")
 
 
   #QQ plots to test the normalcy of the data
   qq1 <-  ggplot2::ggplot()+
     ggplot2::stat_qq(ggplot2::aes(sample = x))+
-    ggplot2::labs(title = glue::glue("Normal Q-Q plot for {xname}"))+
+    ggplot2::labs(title = glue::glue("Normal Q-Q plot for {xname} {cata}"))+
     ggplot2::ylab(glue::glue("{xname} {cata}"))
 
   qq2 <-  ggplot2::ggplot()+
     ggplot2::stat_qq(ggplot2::aes(sample = y))+
-    ggplot2::labs(title = glue::glue("Normal Q-Q plot for {yname}"))+
+    ggplot2::labs(title = glue::glue("Normal Q-Q plot for {yname} {cata}"))+
     ggplot2::ylab(glue::glue("{yname} {cata}"))
 
-  qqplots <- gridExtra::grid.arrange(qq1, qq2)
+
 
 
   # use t.test to find the relevant test statistics
@@ -46,7 +49,8 @@ ttest_report <- function(x = ProjectMale$height, y = ProjectFemale$height, cata 
 
   decision <-
     if(pval < sig.fig){
-      glue::glue("Reject the null hypothesis in favour of the alternative as the reported p-value, {pval}, is less than the {100*sig.fig}% significance level.")
+      glue::glue("Reject the null hypothesis in favour of the alternative as the reported
+                 p-value, {pval}, is less than the {100*sig.fig}% significance level.")
     }else{
       glue::glue("There is insufficient evidence to reject the null hypothesis as the
         p-value, {pval}, is above the {100*sig.fig}% significant level.")
@@ -54,14 +58,17 @@ ttest_report <- function(x = ProjectMale$height, y = ProjectFemale$height, cata 
 
   conclusion <-
     if(pval < sig.fig){
-      glue::glue("The t-test null hypothesis has been refected there must be a difference between the mean {cata} for {xname} and {yname}.
-      Further testing will be needed to conclude if one is significantly lesser or greater than the other.")
+      glue::glue("The t-test null hypothesis has been refected there must be a difference
+      between the mean {cata} for {xname} and {yname}. Hence, {cata} is expected to be different
+      for {xname} and {yname}.  ")
     }else{
-      glue::glue("The t-test null hypothesis has not been rejected there is no statistically significant difference in the mean {cata} for {xname} and {yname}.")
+      glue::glue("The t-test null hypothesis has not been rejected there is no statistically
+                 significant difference in the mean {cata} for {xname} and {yname}. Any observed
+                 difference between the group averages is duie to random chance.")
     }
 
 
-  return(list("hypothesis" = hyp,"plots" = qqplots, "assumptions" = assumptions,
+  return(list("hypothesis" = hyp, "plot1" = qq1, "plot2" = qq2, "assumptions" = assumptions,
               "test.stats" = stats, "decision" = decision, "conclusion" = conclusion))
 
 }

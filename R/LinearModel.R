@@ -20,11 +20,14 @@ LinearModel <- function(X = ProjectData$height, Y = ProjectData$weight, xName = 
 
   LMod <- lm(Y~X)
 
-  hyp <- glue::glue("Testing if there is a linear relationship between {xName} and {yName} of the form {yName} = alpha + beta * {xName} + epsilon.
+  hyp <- glue::glue("Testing if there is a linear relationship between {xName} and {yName} of the form;
+        {yName} = alpha + beta * {xName} + epsilon.
   The Null Hypothesis, H0: B = 0, theres no linear relationship.
   The Alternate H1: B isn't 0, there is a linear relationship.")
 
-  assumptions <- glue::glue("The underlying assumptions for a simple linear regression test are that there exists a linear relationship between the variables, the residuals are independent and normally distributed. These assumptions are checked through the below plots.
+  assumptions <- glue::glue("The underlying assumptions for a simple linear regression test are that there exists a
+                            linear relationship between the variables, the residuals are independent and normally
+                            distributed. These assumptions are checked through the below plots.
                             Ensure that the assumptions of the test are met before considering the latter results. ")
 
   scatterplot <- ggplot2::ggplot()+
@@ -61,8 +64,10 @@ LinearModel <- function(X = ProjectData$height, Y = ProjectData$weight, xName = 
   tval <- sum_lm$coefficients[2,3]
   pval <- sum_lm$coefficients[2,4]
 
-  stat_results <- glue::glue("The slope B is {beta}, and corresponding model estimate is; {yName} = {alpha} + {beta} * {xName} + epsilon
-             The t-value is {tval}, with {degf} degrees of freedom, with a corresponding to a p-value of {pval}.")
+  stat_results <- glue::glue("The slope B is {beta}, and corresponding model estimate is;
+     {yName} = {alpha} + {beta} * {xName} + epsilon
+     The test statistic is {tval}, with {degf} degrees of freedom, corresponding to a
+                             p-value of {pval}.")
 
 
   # Decision and Conclusion
@@ -79,8 +84,10 @@ LinearModel <- function(X = ProjectData$height, Y = ProjectData$weight, xName = 
 
   conclusion <-
     if(pval < sig.fig){
-      glue::glue("The Linear Regression null hypothesis has been refected there must be a linear relationship
-               between {yName} and {xName}. For every unit change in {xName} we expect {yName} to shift by {beta}.
+      glue::glue("The Linear Regression null hypothesis has been refected there must be a linear
+      relationship between {yName} and {xName}.
+      For every unit change in {xName} we expect {yName} to shift by {beta}.
+
                {yName} = {alpha} + {beta} * {xName} + epsilon" )
     }else{
       glue::glue("The Linear Regression null hypothesis has not been rejected, there is no statistically significant linear relationship between {yName} and {xName}.")
